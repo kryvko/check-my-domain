@@ -12,7 +12,7 @@
         <div class="row justify-content-md-center align-items-center h-100">
             <div class="col-12 col-md-10 col-lg-8 col-xl-6">
                 <div class="jumbotron">
-                    <form action="/checkResult" method="get">
+                    <form action="/check-my-domain/checkResult" method="get">
                         <div class="form-group">
                             <label for="domain">Domain:</label>
                             <input class="form-control" id="domain" aria-describedby="domainHelp"
