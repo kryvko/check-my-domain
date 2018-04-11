@@ -36,10 +36,10 @@ public class CheckResultServlet extends HttpServlet {
             writer.write("<br>Broken links: " + bypassDomain.getBrokenUrls().size() + "<br>");
             for(Link link: bypassDomain.getBrokenUrls()) {
                 Link tmpLink = link;
-                writer.write("<h3 style='color: red;'><a href='>" + link.getUrl() + "'/></h3>");
+                writer.write("<h3><a style='color: red;' href='" + link.getUrl() + "'>" + link.getUrl() + "</a></h3>");
                 writer.write("<ul>");
                 while (tmpLink != null) {
-                    writer.write("<li><a href='>" + tmpLink.getUrl() + "'/></li><br>");
+                    writer.write("<li><a href='" + tmpLink.getUrl() + "'>" + tmpLink.getUrl() + "</a></li><br>");
                     tmpLink = tmpLink.getPrevious();
                 }
                 writer.write("</ul><br>");

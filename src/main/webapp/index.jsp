@@ -20,7 +20,7 @@
                             <small id="domainHelp" class="form-text text-muted">domain.sth.com</small>
                         </div>
                         <div class="form-group">
-                            <label for="startUrl">Email address</label>
+                            <label for="startUrl">Start URL</label>
                             <input class="form-control" id="startUrl" aria-describedby="startUrlHelp" name="startUrl"
                                    placeholder="Enter email" required pattern="^https?:\/\/([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/.*)?$">
                             <small id="startUrlHelp" class="form-text text-muted">http://domain.sth.com/index.html

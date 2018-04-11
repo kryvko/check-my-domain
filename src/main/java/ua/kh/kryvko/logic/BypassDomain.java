@@ -13,7 +13,7 @@ public class BypassDomain {
 
     private static final String REG_EXP = "(?<=href=['\"])https?:\\/\\/.+?(?=([\\?\\#].*)?['\"])";
 
-    private static final String RELATIVE_REG_EXP = "(?<=href=['\"])\\/.+?(?=([\\?\\#].*)?['\"])";
+    private static final String RELATIVE_REG_EXP = "(?<=href=['\"])\\/.*?(?=([\\?\\#].*)?['\"])";
 
     private final String domain;
     private final String startUrl;
