@@ -4,52 +4,62 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BypassDomain {
 
-    private static final String REG_EXP = "(?<=href=['\"])https?:\\/\\/.+?(?=([\\?\\#].*)?['\"])";
+    private static final String REG_EXP = "(?<=href=('|\"))https?:\\/\\/.+?(?=\\1)";
 
-    private static final String RELATIVE_REG_EXP = "(?<=href=['\"])\\/.*?(?=([\\?\\#].*)?['\"])";
+    private static final String RELATIVE_REG_EXP = "(?<=href=('|\"))\\/.*?(?=\\1)";
+
+    private static final String PROTOCOL = "http://";
 
     private final String domain;
     private final String startUrl;
-    private final Set<Link> uniqueUrls;
-    private final Set<Link> brokenUrls;
+    private final Set<URL> uniqueUrls;
+    private final Map<URL, Set<URL>> brokenUrls;
     private final Pattern hrefPattern;
-    private final Pattern domainPattern;
     private final Pattern relativePattern;
 
     public BypassDomain(String domain, String startUrl) {
         this.domain = domain;
         this.startUrl = startUrl;
         this.uniqueUrls = new HashSet<>();
-        this.brokenUrls = new HashSet<>();
+        this.brokenUrls = new HashMap<>();
         this.hrefPattern = Pattern.compile(REG_EXP);
         this.relativePattern = Pattern.compile(RELATIVE_REG_EXP);
-        this.domainPattern = Pattern.compile(domain);
     }
 
     public void startBypass() {
         bypassing(this.startUrl, null);
     }
 
-    private void bypassing(String url, Link previousLink) {
-        Link link = new Link(url, previousLink);
+    private void bypassing(String url, URL previousLink) {
 
-        if(uniqueUrls.contains(link)) {
-            return;
-        }
+        URL link = null;
+        String html = null;
 
-        uniqueUrls.add(link);
-        String html;
         try {
+            link = new URL(url);
+
+            if(uniqueUrls.contains(link)) {
+                return;
+            }
+
+            if(brokenUrls.containsKey(link)) {
+                brokenUrls.get(link).add(previousLink);
+                return;
+            }
+
             html = getHtmlByUrl(url);
+            uniqueUrls.add(link);
         } catch (IOException e) {
-            brokenUrls.add(link);
+            brokenUrls.put(link, new HashSet<URL>()).add(previousLink);
             return;
         }
 
@@ -59,13 +69,14 @@ public class BypassDomain {
 
         Set<String> foundUrls = getAllUrlsFromHtml(html);
         html = null;
+
         for(String foundUrl: foundUrls) {
             bypassing(foundUrl, link);
         }
     }
 
     private boolean hasDomainInUrl(String url) {
-        return this.domainPattern.matcher(url).find();
+        return url.contains(this.domain);
     }
 
     private Set<String> getAllUrlsFromHtml(String html) {
@@ -76,7 +87,7 @@ public class BypassDomain {
         }
         Matcher relativeMatcher = this.relativePattern.matcher(html);
         while (relativeMatcher.find()) {
-            links.add("http://" + this.domain + relativeMatcher.group());
+            links.add(PROTOCOL + this.domain + relativeMatcher.group());
         }
         return links;
     }
@@ -95,11 +106,11 @@ public class BypassDomain {
         return html.toString();
     }
 
-    public Set<Link> getUniqueUrls() {
+    public Set<URL> getUniqueUrls() {
         return uniqueUrls;
     }
 
-    public Set<Link> getBrokenUrls() {
+    public Map<URL, Set<URL>> getBrokenUrls() {
         return brokenUrls;
     }
 }
