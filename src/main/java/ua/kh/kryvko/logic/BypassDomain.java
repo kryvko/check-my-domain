@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -59,7 +60,8 @@ public class BypassDomain {
             html = getHtmlByUrl(url);
             uniqueUrls.add(link);
         } catch (IOException e) {
-            brokenUrls.put(link, new HashSet<URL>()).add(previousLink);
+            brokenUrls.put(link, new HashSet<URL>());
+            brokenUrls.get(link).add(previousLink);
             return;
         }
 
@@ -93,9 +95,14 @@ public class BypassDomain {
     }
 
     private static String getHtmlByUrl(String url) throws IOException {
+
         URL oracle = new URL(url);
+        URLConnection con = oracle.openConnection();
+        con.setConnectTimeout(5000);
+        con.setReadTimeout(5000);
+
         BufferedReader in = new BufferedReader(
-                new InputStreamReader(oracle.openStream()));
+                new InputStreamReader(con.getInputStream()));
 
         StringBuilder html = new StringBuilder();
         while (in.ready()) {

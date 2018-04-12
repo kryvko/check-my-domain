@@ -33,9 +33,6 @@ public class CheckResultServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        this.servletContext.setAttribute("isLoading", true);
-        this.servletContext.setAttribute("domain", request.getParameter("domain"));
-
         String domain = request.getParameter("domain");
         String startUrl = request.getParameter("startUrl");
 
@@ -43,6 +40,9 @@ public class CheckResultServlet extends HttpServlet {
             response.setStatus(400);
             return;
         }
+
+        this.servletContext.setAttribute("isLoading", true);
+        this.servletContext.setAttribute("domain", domain);
 
         BypassDomain bypassDomain = new BypassDomain(domain, startUrl);
 

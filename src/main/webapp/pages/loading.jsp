@@ -30,7 +30,7 @@
                     </p>
                 </c:if>
                 <c:if test="${not applicationScope['isLoading']}">
-                    <c:redirect url="${pageContext.request.contextPath}/lastResult"/>
+                    <c:redirect url="/lastResult"/>
                 </c:if>
             </div>
         </div>
