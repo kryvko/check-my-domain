@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
 <html>
 <head>
@@ -12,7 +13,7 @@
         <div class="row justify-content-md-center align-items-center h-100">
             <div class="col-12 col-md-10 col-lg-8 col-xl-6">
                 <div class="jumbotron">
-                    <form action="/check-my-domain/checkResult" method="get">
+                    <form action="${pageContext.request.contextPath}/checkResult" method="get">
                         <div class="form-group">
                             <label for="domain">Domain:</label>
                             <input class="form-control" id="domain" aria-describedby="domainHelp"
@@ -27,6 +28,13 @@
                             </small>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit</button>
+                        <c:if test="${not empty applicationScope['lastDomain']}">
+                            <hr class="my-4">
+                            <p>You can view the result for the domain ${applicationScope['lastDomain']}</p>
+                            <p class="lead">
+                                <a class="btn btn-primary" href="${pageContext.request.contextPath}/lastResult" role="button">Show last result</a>
+                            </p>
+                        </c:if>
                     </form>
                 </div>
             </div>

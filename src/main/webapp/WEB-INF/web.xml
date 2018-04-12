@@ -12,6 +12,11 @@
 
   <filter-mapping>
     <filter-name>Filter</filter-name>
+    <url-pattern>/index.jsp</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>Filter</filter-name>
     <url-pattern>/checkResult</url-pattern>
   </filter-mapping>
 

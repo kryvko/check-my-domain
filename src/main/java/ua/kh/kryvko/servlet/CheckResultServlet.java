@@ -20,12 +20,10 @@ public class CheckResultServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         this.servletContext = config.getServletContext();
-        this.servletContext.setAttribute("isLoading", true);
     }
 
     @Override
     public void destroy() {
-        this.servletContext.setAttribute("isLoading", false);
         super.destroy();
     }
 
@@ -34,6 +32,9 @@ public class CheckResultServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        this.servletContext.setAttribute("isLoading", true);
+        this.servletContext.setAttribute("domain", request.getParameter("domain"));
 
         String domain = request.getParameter("domain");
         String startUrl = request.getParameter("startUrl");
@@ -62,6 +63,8 @@ public class CheckResultServlet extends HttpServlet {
         stringBuilder.append("</body></html>");
         String result = stringBuilder.toString();
         this.servletContext.setAttribute("lastResult", result);
-        response.sendRedirect("/check-my-domain/lastResult");
+        this.servletContext.setAttribute("isLoading", false);
+        this.servletContext.setAttribute("lastDomain", this.servletContext.getAttribute("domain"));
+        response.sendRedirect(request.getContextPath() + "/lastResult");
     }
 }
