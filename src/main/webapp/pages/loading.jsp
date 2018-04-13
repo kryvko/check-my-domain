@@ -7,6 +7,7 @@
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" %>
+<%@ page import="ua.kh.kryvko.name.ServletContextNames" %>
 <html>
 <head>
     <title>Loading</title>
@@ -21,15 +22,15 @@
         <div class="col-12 col-md-10 col-lg-8 col-xl-6">
             <div class="jumbotron">
                 <h1 class="display-3">I'm busy now!</h1>
-                <p class="lead">Now the domain <span class="font-weight-bold">${applicationScope['domain']}</span> is being processed</p>
+                <p class="lead">Now the domain <span class="font-weight-bold">${applicationScope[ServletContextNames.DOMAIN]}</span> is being processed</p>
                 <hr class="my-4">
-                <c:if test="${not empty applicationScope['lastDomain']}">
-                    <p>You can view the result for the domain ${applicationScope['lastDomain']}</p>
+                <c:if test="${not empty applicationScope[ServletContextNames.LAST_DOMAIN]}">
+                    <p>You can view the result for the domain ${applicationScope[ServletContextNames.LAST_DOMAIN]}</p>
                     <p class="lead">
                         <a class="btn btn-primary" href="${pageContext.request.contextPath}/lastResult" role="button">Show last result</a>
                     </p>
                 </c:if>
-                <c:if test="${not applicationScope['isLoading']}">
+                <c:if test="${not applicationScope[ServletContextNames.IS_LOADING]}">
                     <c:redirect url="/lastResult"/>
                 </c:if>
             </div>

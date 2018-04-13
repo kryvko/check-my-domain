@@ -1,5 +1,7 @@
 package ua.kh.kryvko.listener;
 
+import ua.kh.kryvko.name.ServletContextNames;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSessionAttributeListener;
@@ -18,8 +20,11 @@ public class ServletContextListenerImpl implements ServletContextListener,
     // ServletContextListener implementation
     // -------------------------------------------------------
     public void contextInitialized(ServletContextEvent sce) {
-        sce.getServletContext().setAttribute("isLoading", false);
-        sce.getServletContext().setAttribute("lastResult", "Empty");
+        sce.getServletContext().setAttribute(ServletContextNames.IS_LOADING, false);
+        sce.getServletContext().setAttribute(ServletContextNames.DOMAIN, null);
+        sce.getServletContext().setAttribute(ServletContextNames.LAST_DOMAIN, null);
+        sce.getServletContext().setAttribute(ServletContextNames.BROKEN_LINKS, null);
+        sce.getServletContext().setAttribute(ServletContextNames.UNIQUE_LINKS_COUNT, null);
     }
 
     public void contextDestroyed(ServletContextEvent sce) {

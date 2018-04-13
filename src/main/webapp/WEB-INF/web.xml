@@ -28,24 +28,27 @@
     <servlet-name>CheckResult</servlet-name>
     <servlet-class>ua.kh.kryvko.servlet.CheckResultServlet</servlet-class>
   </servlet>
-  <servlet>
-    <servlet-name>LastResult</servlet-name>
-    <servlet-class>ua.kh.kryvko.servlet.LastResult</servlet-class>
-  </servlet>
 
   <servlet-mapping>
     <servlet-name>CheckResult</servlet-name>
     <url-pattern>/checkResult</url-pattern>
   </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>LastResult</servlet-name>
-    <url-pattern>/lastResult</url-pattern>
-  </servlet-mapping>
+
 
   <servlet>
     <servlet-name>Loading</servlet-name>
     <jsp-file>/pages/loading.jsp</jsp-file>
   </servlet>
+  
+  <servlet>
+    <servlet-name>LastResult</servlet-name>
+    <jsp-file>/pages/lastResult.jsp</jsp-file>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>LastResult</servlet-name>
+    <url-pattern>/lastResult</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>Loading</servlet-name>
