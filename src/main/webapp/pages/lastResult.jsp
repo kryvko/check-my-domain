@@ -33,7 +33,7 @@
     </style>
 </head>
 <body>
-<c:if test="${not empty applicationScope[ServletContextNames.BROKEN_LINKS] and not empty applicationScope[ServletContextNames.UNIQUE_LINKS_COUNT]}">
+<c:if test="${applicationScope[ServletContextNames.BROKEN_LINKS] != null and applicationScope[ServletContextNames.UNIQUE_LINKS_COUNT] != null}">
     <div class="content">
         <div class="uniqueLinksCount">
             Count of unique links: ${applicationScope[ServletContextNames.UNIQUE_LINKS_COUNT]}
