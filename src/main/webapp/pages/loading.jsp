@@ -25,7 +25,7 @@
                 <p class="lead">Now the domain <span class="font-weight-bold">${applicationScope[ServletContextNames.DOMAIN]}</span> is being processed</p>
                 <hr class="my-4">
                 <c:if test="${not empty applicationScope[ServletContextNames.LAST_DOMAIN]}">
-                    <p>You can view the result for the domain ${applicationScope[ServletContextNames.LAST_DOMAIN]}</p>
+                    <p>You can view the result for the domain <span class="font-weight-bold">${applicationScope[ServletContextNames.LAST_DOMAIN]}</span></p>
                     <p class="lead">
                         <a class="btn btn-primary" href="${pageContext.request.contextPath}/lastResult" role="button">Show last result</a>
                     </p>
