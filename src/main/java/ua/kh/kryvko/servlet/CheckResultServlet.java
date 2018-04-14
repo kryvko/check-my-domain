@@ -24,6 +24,11 @@ public class CheckResultServlet extends HttpServlet {
         this.servletContext = config.getServletContext();
     }
 
+    @Override
+    public void destroy() {
+        super.destroy();
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
@@ -41,14 +46,19 @@ public class CheckResultServlet extends HttpServlet {
         this.servletContext.setAttribute(ServletContextNames.IS_LOADING, true);
         this.servletContext.setAttribute(ServletContextNames.DOMAIN, domain);
 
-        BypassDomain bypassDomain = new BypassDomain(domain, startUrl);
+        try {
+            BypassDomain bypassDomain = new BypassDomain(domain, startUrl);
 
-        bypassDomain.startBypass();
+            bypassDomain.startBypass();
 
-        this.servletContext.setAttribute(ServletContextNames.UNIQUE_LINKS_COUNT, bypassDomain.getUniqueUrls().size());
-        this.servletContext.setAttribute(ServletContextNames.BROKEN_LINKS, bypassDomain.getBrokenUrls());
-        this.servletContext.setAttribute(ServletContextNames.LAST_DOMAIN, this.servletContext.getAttribute(ServletContextNames.DOMAIN));
-        this.servletContext.setAttribute(ServletContextNames.IS_LOADING, false);
+            this.servletContext.setAttribute(ServletContextNames.UNIQUE_LINKS_COUNT, bypassDomain.getUniqueUrls().size());
+            this.servletContext.setAttribute(ServletContextNames.BROKEN_LINKS, bypassDomain.getBrokenUrls());
+            this.servletContext.setAttribute(ServletContextNames.LAST_DOMAIN, this.servletContext.getAttribute(ServletContextNames.DOMAIN));
+        } catch (Error error) {
+            this.servletContext.setAttribute(ServletContextNames.HAS_ERROR, true);
+        } finally {
+            this.servletContext.setAttribute(ServletContextNames.IS_LOADING, false);
+        }
         response.sendRedirect(request.getContextPath() + "/lastResult");
     }
 }

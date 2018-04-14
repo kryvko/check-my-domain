@@ -60,9 +60,9 @@
 </c:if>
 <script type="text/javascript">
     function onClickAction(event) {
-        var toggler = event.target;
-        toggler.parentNode.querySelector('.referenceList').classList.toggle('d0');
-        toggler.classList.toggle('open');
+        var brokenLinkContainer = event.target.closest('.brokenLinkContainer');
+        brokenLinkContainer.querySelector('.referenceList').classList.toggle('d0');
+        brokenLinkContainer.querySelector('.toggler').classList.toggle('open');
     }
 
     document.getElementsByClassName('brokenLinks')[0].addEventListener('click', onClickAction);

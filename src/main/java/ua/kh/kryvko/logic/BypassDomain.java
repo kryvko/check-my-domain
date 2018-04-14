@@ -1,5 +1,9 @@
 package ua.kh.kryvko.logic;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,16 +18,20 @@ import java.util.regex.Pattern;
 
 public class BypassDomain {
 
-    private static final String REG_EXP = "(?<=href=('|\"))https?:\\/\\/.+?(?=\\1)";
+    private static final String REG_EXP = "(?<=href=('|\"))https?:\\/\\/.+?(?=(#.*?)?\\1)";
 
-    private static final String RELATIVE_REG_EXP = "(?<=href=('|\"))\\/.*?(?=\\1)";
+    private static final String RELATIVE_REG_EXP = "(?<=href=('|\"))\\/.*?(?=(#.*?)?\\1)";
 
     private static final String PROTOCOL = "http://";
 
+    private static final String CONTENT_TYPE = "text/html";
+
+    private static final Logger LOGGER = Logger.getLogger("error");
+
     private final String domain;
     private final String startUrl;
-    private final Set<URL> uniqueUrls;
-    private final Map<URL, Set<URL>> brokenUrls;
+    private final Set<String> uniqueUrls;
+    private final Map<String, Set<URL>> brokenUrls;
     private final Pattern hrefPattern;
     private final Pattern relativePattern;
 
@@ -42,38 +50,49 @@ public class BypassDomain {
 
     private void bypassing(String url, URL previousLink) {
 
-        URL link = null;
-        String html = null;
-
         try {
-            link = new URL(url);
+            URL link = null;
+            String html = null;
 
-            if(uniqueUrls.contains(link)) {
+            try {
+                link = new URL(url);
+
+                if (uniqueUrls.contains(url)) {
+                    return;
+                }
+
+                if (brokenUrls.containsKey(url)) {
+                    brokenUrls.get(url).add(previousLink);
+                    return;
+                }
+
+                html = getHtmlByUrl(link);
+                uniqueUrls.add(url);
+            } catch (Exception e) {
+                if (!brokenUrls.containsKey(url)) {
+                    brokenUrls.put(url, new HashSet<URL>());
+                }
+                brokenUrls.get(url).add(previousLink);
                 return;
             }
 
-            if(brokenUrls.containsKey(link)) {
-                brokenUrls.get(link).add(previousLink);
+            if (!hasDomainInUrl(url)) {
                 return;
             }
 
-            html = getHtmlByUrl(url);
-            uniqueUrls.add(link);
-        } catch (IOException e) {
-            brokenUrls.put(link, new HashSet<URL>());
-            brokenUrls.get(link).add(previousLink);
-            return;
-        }
+            if (html == null) {
+                return;
+            }
 
-        if(!hasDomainInUrl(url)) {
-            return;
-        }
+            Set<String> foundUrls = getAllUrlsFromHtml(html);
+            html = null;
 
-        Set<String> foundUrls = getAllUrlsFromHtml(html);
-        html = null;
-
-        for(String foundUrl: foundUrls) {
-            bypassing(foundUrl, link);
+            for (String foundUrl : foundUrls) {
+                bypassing(foundUrl, link);
+            }
+        } catch (Error e) {
+            LOGGER.log(Level.ERROR, url, e);
+            throw e;
         }
     }
 
@@ -94,30 +113,34 @@ public class BypassDomain {
         return links;
     }
 
-    private static String getHtmlByUrl(String url) throws IOException {
+    private static String getHtmlByUrl(URL url) throws IOException {
 
-        URL oracle = new URL(url);
-        URLConnection con = oracle.openConnection();
+        String html = null;
+        URLConnection con = url.openConnection();
         con.setConnectTimeout(5000);
         con.setReadTimeout(5000);
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
+        if (con.getContentType() == null || con.getContentType().contains(CONTENT_TYPE)) {
 
-        StringBuilder html = new StringBuilder();
-        while (in.ready()) {
-            html.append(in.readLine());
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+
+            StringBuilder htmlBuffer = new StringBuilder();
+            while (in.ready()) {
+                htmlBuffer.append(in.readLine());
+            }
+
+            in.close();
+            html = htmlBuffer.toString();
         }
-
-        in.close();
-        return html.toString();
+        return html;
     }
 
-    public Set<URL> getUniqueUrls() {
+    public Set<String> getUniqueUrls() {
         return uniqueUrls;
     }
 
-    public Map<URL, Set<URL>> getBrokenUrls() {
+    public Map<String, Set<URL>> getBrokenUrls() {
         return brokenUrls;
     }
 }

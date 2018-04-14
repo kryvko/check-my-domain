@@ -1,0 +1,4 @@
+log4j.logger.error=ERROR, log
+log4j.appender.log=org.apache.log4j.FileAppender
+log4j.appender.log.File=${catalina.home}/logs/check-my-domain/application.log
+log4j.appender.log.layout=org.apache.log4j.SimpleLayout

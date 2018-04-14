@@ -25,6 +25,7 @@ public class ServletContextListenerImpl implements ServletContextListener,
         sce.getServletContext().setAttribute(ServletContextNames.LAST_DOMAIN, null);
         sce.getServletContext().setAttribute(ServletContextNames.BROKEN_LINKS, null);
         sce.getServletContext().setAttribute(ServletContextNames.UNIQUE_LINKS_COUNT, null);
+        sce.getServletContext().setAttribute(ServletContextNames.HAS_ERROR, false);
     }
 
     public void contextDestroyed(ServletContextEvent sce) {

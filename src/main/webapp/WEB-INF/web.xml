@@ -6,23 +6,36 @@
 
   <display-name>Archetype Created Web Application</display-name>
   <filter>
-    <filter-name>Filter</filter-name>
-    <filter-class>ua.kh.kryvko.filter.Filter</filter-class>
+    <filter-name>Loading</filter-name>
+    <filter-class>ua.kh.kryvko.filter.Loading</filter-class>
+  </filter>
+  <filter>
+    <filter-name>Error</filter-name>
+    <filter-class>ua.kh.kryvko.filter.Error</filter-class>
   </filter>
 
   <filter-mapping>
-    <filter-name>Filter</filter-name>
+    <filter-name>Loading</filter-name>
     <url-pattern>/index.jsp</url-pattern>
   </filter-mapping>
 
   <filter-mapping>
-    <filter-name>Filter</filter-name>
+    <filter-name>Loading</filter-name>
     <url-pattern>/checkResult</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>Error</filter-name>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
 
     <listener>
         <listener-class>ua.kh.kryvko.listener.ServletContextListenerImpl</listener-class>
     </listener>
+
+  <listener>
+    <listener-class>ua.kh.kryvko.listener.Log4jInit</listener-class>
+  </listener>
 
   <servlet>
     <servlet-name>CheckResult</servlet-name>
@@ -39,7 +52,12 @@
     <servlet-name>Loading</servlet-name>
     <jsp-file>/pages/loading.jsp</jsp-file>
   </servlet>
-  
+
+  <servlet>
+    <servlet-name>Error</servlet-name>
+    <jsp-file>/pages/error.jsp</jsp-file>
+  </servlet>
+
   <servlet>
     <servlet-name>LastResult</servlet-name>
     <jsp-file>/pages/lastResult.jsp</jsp-file>
@@ -53,5 +71,10 @@
   <servlet-mapping>
     <servlet-name>Loading</servlet-name>
     <url-pattern>/loading</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Error</servlet-name>
+    <url-pattern>/error</url-pattern>
   </servlet-mapping>
 </web-app>

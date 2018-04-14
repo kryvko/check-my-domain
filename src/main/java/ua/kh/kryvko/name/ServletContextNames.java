@@ -14,4 +14,6 @@ public class ServletContextNames {
 
     public static final String LAST_DOMAIN = "lastDomain";
 
+    public static final String HAS_ERROR = "hasError";
+
 }
